@@ -1,0 +1,16 @@
+cat > .gitignore <<'EOF'
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Env + secrets
+.env
+.twitch_oauth.json
+
+# OS
+.DS_Store
+EOF
+
+user_token.json
