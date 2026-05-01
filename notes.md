@@ -43,11 +43,19 @@ TODO: implement the final backend which writes to PosgreSQL DB and frontend
             find a way to increase consumers
                 in-turn increasing throughput
     
-04/29/26 12:25 PM - 1:29 PM
+04/29/26 12:25 PM - 4:40 PM
 Trying to make code more modular
     thinking about splitting into 2 folders
         consumer, injestion + producer, and main on the outside
+        
 Added 8 partionions to docker-compose to increase throughput
 Tested using Docker Lag the lag in increasing over 10 seconds (6954 --> 7151) so the ML model is slowing us down
     Changed to use Apple GPU via pytorch mps, now there is no lag (Optimized hardware)
     Sentiment is calculated on a buffer calssifying them in one forward pass. Bounded by draining 32 messages at a time from Kafka or a 500ms flush so the latency stays real time.
+
+05/01/26 3:44 PM - 
+
+Initilized Django API and DB
+Created DB Models
+    Need to work more on making the DB models more relational and easier to work together
+

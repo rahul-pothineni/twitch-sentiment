@@ -10,7 +10,7 @@ from twitchAPI.helper import first
 from twitchAPI.twitch import Twitch
 from twitchAPI.oauth import UserAuthenticationStorageHelper
 from twitchAPI.type import AuthScope
-
+from db.models import Session, Streamer
 
 # Minimum scopes needed to read chat messages over EventSub.
 SCOPES = [AuthScope.USER_READ_CHAT]
@@ -25,10 +25,12 @@ async def authenticate(app_id: str, app_secret: str):
     return twitch, me
 
 
-async def resolve_target_channels(twitch: Twitch, channels: list[str]):
+async def resolve_target_channels(twitch: Twitch, channels: list[str], session: Session):
     """Resolve channel logins to TwitchUser objects, raising if any are missing."""
     targets = [user async for user in twitch.get_users(logins=channels)]
     found = {u.login.lower() for u in targets}
+    for streamer_name in found:
+        Streamer.objects.create(session_id = session.id, username = streamer_name)
     missing = [c for c in channels if c.lower() not in found]
     if missing:
         raise SystemExit(f"channels not found: {missing}")

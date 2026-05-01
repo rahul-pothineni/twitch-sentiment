@@ -70,13 +70,12 @@ class Sentiment:
                 for payload, result in zip(buffer, results):
                     self.msg_count += 1
                     # Print every 100th message so stdout doesn't dominate the loop.
-                    if self.msg_count % 100 == 0:
-                        print(
-                            f"[{self.msg_count}] "
-                            f"{payload['broadcaster_channel']}: "
-                            f"{payload['message'][:60]} "
-                            f"-> {result['label']} {result['score']:.3f}"
-                        )
+                    print(
+                        f"[{self.msg_count}] "
+                        f"{payload['broadcaster_channel']}: "
+                        f"{payload['message'][:60]} "
+                        f"-> {result['label']} {result['score']:.3f}"
+                    )
 
     def _drain_buffer(self, consumer: KafkaConsumer) -> list[dict]:
         """Pull up to BATCH_SIZE messages, but never block more than MAX_BATCH_WAIT_SECONDS."""
