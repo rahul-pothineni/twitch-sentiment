@@ -59,3 +59,8 @@ Initilized Django API and DB
 Created DB Models
     Need to work more on making the DB models more relational and easier to work together
 
+05/02/26 3:15 PM - 
+
+Made session as a gloabal acess varaible in main
+    accesed the session in sentiment.py to find the twitch streamer, and write the message to the DB. 
+

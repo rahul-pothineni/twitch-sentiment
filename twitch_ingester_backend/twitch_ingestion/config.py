@@ -11,7 +11,6 @@ from dataclasses import dataclass
 
 from dotenv import load_dotenv
 
-
 @dataclass
 class Settings:
     app_id: str
@@ -19,7 +18,6 @@ class Settings:
     target_channels: list[str]
     kafka_broker: str = "localhost:9092"
     raw_topic: str = "twitch_chat"
-
 
 def load_settings() -> Settings:
     """Read .env into the process and return a populated Settings instance."""

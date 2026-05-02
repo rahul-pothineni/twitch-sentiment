@@ -10,6 +10,12 @@ are buffered and classified in batches on the fastest available accelerator
 Model: https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment-latest
 """
 
+
+import os
+import django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "api.settings")
+django.setup()
+
 import time
 
 import torch
@@ -18,6 +24,8 @@ from transformers import pipeline
 from twitch_ingester_backend.twitch_ingestion import config
 from twitch_ingester_backend.twitch_ingestion.kafka_consumer import KafkaConsumer
 
+from db.models import Streamer, Message
+from django.core.exceptions import ObjectDoesNotExist
 
 MODEL_PATH = "cardiffnlp/twitter-roberta-base-sentiment-latest"
 
@@ -69,7 +77,23 @@ class Sentiment:
 
                 for payload, result in zip(buffer, results):
                     self.msg_count += 1
-                    # Print every 100th message so stdout doesn't dominate the loop.
+                    session_id = payload.get("session_id")
+                    if not session_id:
+                        continue
+                    try:
+                        streamer = Streamer.objects.get(
+                            session_id=session_id,
+                            username=payload["broadcaster_channel"],
+                        )
+                    except ObjectDoesNotExist:
+                        print(f"no streamer row for {payload['broadcaster_channel']} in session {payload['session_id']}; skipping")
+                        continue
+                    Message.objects.create(
+                        streamer=streamer,
+                        content=payload["message"],
+                        sentiment=result["score"],
+                        #label=result["label"],   # see Fix 4
+                    )
                     print(
                         f"[{self.msg_count}] "
                         f"{payload['broadcaster_channel']}: "

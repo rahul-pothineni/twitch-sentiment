@@ -30,7 +30,7 @@ async def resolve_target_channels(twitch: Twitch, channels: list[str], session: 
     targets = [user async for user in twitch.get_users(logins=channels)]
     found = {u.login.lower() for u in targets}
     for streamer_name in found:
-        Streamer.objects.create(session_id = session.id, username = streamer_name)
+        await Streamer.objects.aget_or_create(session = session, username = streamer_name)
     missing = [c for c in channels if c.lower() not in found]
     if missing:
         raise SystemExit(f"channels not found: {missing}")

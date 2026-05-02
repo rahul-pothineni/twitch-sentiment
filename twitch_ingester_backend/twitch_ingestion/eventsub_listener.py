@@ -15,16 +15,13 @@ from twitchAPI.twitch import Twitch
 from twitchAPI.object.api import TwitchUser
 
 from twitch_ingester_backend.twitch_ingestion.schemas.ChatMessage import ChatMessage
+from db.models import Session
 
 class ChatListener:
-    def __init__(
-        self,
-        twitch: Twitch,
-        me_id: str,
-        on_message: Callable[[ChatMessage], None],
-    ):
+    def __init__(self, twitch: Twitch, me_id: str, on_message: Callable[[ChatMessage], None], session_id: str): 
         self.twitch = twitch
         self.me_id = me_id
+        self.session_id = session_id
         self.on_message = on_message
         self._eventsub: EventSubWebsocket | None = None
 
@@ -35,6 +32,7 @@ class ChatListener:
             "broadcaster_channel": e.broadcaster_user_login,
             "sending_user": e.chatter_user_login,
             "message": e.message.text,
+            "session_id": self.session_id,
         })
 
     async def start(self, targets: list[TwitchUser]):

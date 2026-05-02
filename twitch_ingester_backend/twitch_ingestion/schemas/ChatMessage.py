@@ -14,6 +14,7 @@ Fields:
 from typing import TypedDict
 
 class ChatMessage(TypedDict):
+    session_id: str
     broadcaster_channel: str
     sending_user: str
     message: str

@@ -19,7 +19,8 @@ class Streamer(models.Model):
 
 class Message(models.Model):
     streamer = models.ForeignKey(Streamer, on_delete=models.CASCADE, related_name="messages")
-    sender_username = models.CharField(max_length=26)
+    #sender_username = models.CharField(max_length=25)
     content = models.TextField()
     sent_at = models.DateTimeField(default=timezone.now)
-    sentiment = models.IntegerField(null = True, blank = True)
+    sentiment = models.FloatField(null = True, blank = True)
+
