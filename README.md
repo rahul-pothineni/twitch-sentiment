@@ -5,7 +5,7 @@ An application that helps Twitch streamers and viewers analyze live stream chat 
 ## 📦 Technologies 
 
 - `PostgreSQL (Django ORM)`
-- `Python`
+- `Python (Django)`
 - `Confluent Kafka (quixstreams)`
 - `PostgreSQL`
 - `React`
